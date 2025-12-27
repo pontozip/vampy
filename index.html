@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Feliz Aniversário!</title>
+    <!-- Tailwind CSS para estilização rápida e moderna -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Playwrite+DE+SAS:wght@100..400&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #fce4ec 0%, #f3e5f5 100%);
+            min-height: 100vh;
+            overflow: hidden; 
+            touch-action: manipulation;
+        }
+
+        .cursive {
+            font-family: 'Playwrite DE SAS', cursive;
+        }
+
+        /* Estilo dos Emojis Caindo */
+        .emoji-particle {
+            position: fixed;
+            top: -50px;
+            font-size: 1.5rem;
+            user-select: none;
+            z-index: 10;
+            pointer-events: none;
+            animation: fall linear forwards;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(110vh);
+            }
+        }
+
+        /* Sistema de Cards Mobile First */
+        .card-container {
+            position: relative;
+            width: 90%;
+            max-width: 400px;
+            height: 380px; /* Aumentado para comportar texto em telas estreitas */
+        }
+
+        .card {
+            position: absolute;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(8px);
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            box-shadow: 0 10px 25px rgba(214, 51, 132, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0;
+            transform: scale(0.9) translateY(20px);
+            pointer-events: none;
+        }
+
+        .card.active {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            pointer-events: auto;
+            z-index: 20;
+        }
+
+        .card.prev {
+            opacity: 0;
+            transform: scale(0.8) translateY(-60px);
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.98);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            transition: opacity 0.5s ease;
+        }
+
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        /* Ajuste para o player não cobrir conteúdo em telas muito pequenas */
+        @media (max-height: 600px) {
+            .card-container { height: 300px; }
+            .floating img { width: 80px; height: 80px; }
+            h1 { margin-bottom: 0.5rem !important; font-size: 1.875rem !important; }
+        }
+    </style>
+</head>
+<body class="h-screen flex items-center justify-center overflow-hidden">
+
+    <!-- Tela Inicial -->
+    <div id="welcome-overlay" class="overlay p-6">
+        <div class="text-center">
+            <button onclick="startCelebration()" class="bg-pink-500 active:bg-pink-700 text-white font-bold py-4 px-10 rounded-full shadow-2xl transition-all transform active:scale-90">
+                Abrir Presente 🎁
+            </button>
+        </div>
+    </div>
+
+    <!-- Conteúdo Principal -->
+    <div id="main-content" class="w-full hidden flex flex-col items-center justify-center px-4 safe-area-inset-bottom">
+        
+        <!-- Foto de Topo -->
+        <div class="mb-4 md:mb-8 floating">
+            <div class="relative">
+                <div class="absolute inset-0 bg-pink-300 rounded-full blur-xl opacity-40"></div>
+                <img src="02.jpeg"
+                     alt="Aniversário" 
+                     class="relative w-28 h-28 md:w-40 md:h-40 rounded-full border-4 border-white shadow-lg object-cover">
+            </div>
+        </div>
+
+        <h1 class="text-3xl md:text-4xl cursive text-pink-600 mb-6">Parabéns, Vampy!</h1>
+
+        <!-- Container de Cards -->
+        <div class="card-container mb-6">
+            <!-- Card 1 -->
+            <div class="card active" id="card-0">
+                <p class="text-gray-700 text-lg md:text-xl leading-relaxed">
+                    Sei que a gente se conhece há pouco tempo, mas você já me conquistou com esse seu jeito "meio bruto" que esconde um coração gigante e gentil. Que seu dia seja incrível, com toda a atenção que você merece e que a distância não impeça você de sentir o quanto é especial por todos no Brasil. ✨
+                </p>
+                <button onclick="nextCard(1)" class="mt-6 bg-pink-500 text-white px-8 py-3 rounded-full font-semibold shadow-md active:bg-pink-600 transition">Próximo →</button>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="card" id="card-1">
+                <p class="text-gray-700 text-lg md:text-xl leading-relaxed">
+                    ​Espero que você ganhe todas as pelúcias que quiser e que a sua coleção de Bakugos só aumente. ​Que a gente ainda jogue bastante Fortnite e comemore muitas vitórias juntas. 🎂
+                </p>
+                <button onclick="nextCard(2)" class="mt-6 bg-pink-500 text-white px-8 py-3 rounded-full font-semibold shadow-md active:bg-pink-600 transition">Continuar →</button>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="card" id="card-2">
+                <p class="text-gray-700 text-lg md:text-xl leading-relaxed italic">
+                    Aproveita muito o seu dia, minha emo franjudinha favorita. ❤️
+                </p>
+                <button onclick="nextCard(3)" class="mt-6 bg-pink-500 text-white px-8 py-3 rounded-full font-semibold shadow-md active:bg-pink-600 transition">Continuar →</button>
+            </div>
+
+            <!-- Card 3 -->
+            <div class="card" id="card-3">
+                <p class="text-gray-700 text-lg md:text-xl leading-relaxed italic">
+                    Obs: essa é a nossa música do match e como a letra diz "onde quer que eu vá te levo comigo". Acho que algumas pessoas simplesmente grudam na nossa mente e no coração e com você foi assim. Já não dá mais para ver certas coisas e não lembrar automaticamente de você. Isso mostra o quão foda você é, nunca se esqueça disso. 
+                </p>
+                <button onclick="nextCard(4)" class="mt-6 bg-pink-500 text-white px-8 py-3 rounded-full font-semibold shadow-md active:bg-pink-600 transition">Quase lá ❤️</button>
+            </div>
+
+            <!-- Card Final -->
+            <div class="card bg-pink-50/95 border-pink-200" id="card-4">
+                <p class="text-pink-600 font-bold text-xl md:text-2xl mb-4">Aproveite muito!</p>
+                <p class="text-gray-500 text-sm md:text-base">Com todo meu carinho,</p>
+                <p class="cursive text-3xl md:text-4xl text-pink-500 mt-2">zip</p>
+                <button onclick="nextCard(5)" class="mt-6 bg-pink-500 text-white px-8 py-3 rounded-full font-semibold shadow-md active:bg-pink-600 transition">Última coisa 😡</button>
+            </div>
+
+             <div class="card" id="card-5">
+                <p class="text-gray-700 text-lg md:text-xl leading-relaxed italic">
+                    Véi, eu ia te mandar uma skin de surpresa no Fortnite, mas você já tem tudo, aí fica difícil. Vontade de te dar um bandão, mas já que estragou meu plano, escolhe uma que você queira e me fala até mês que vem. Faço questão. 🙄🖤
+                </p>
+            </div>
+        </div>
+
+        <!-- Player de Música Compacto para Mobile -->
+        <div class="mt-4">
+            <div class="bg-white/80 backdrop-blur-md rounded-full px-5 py-2 shadow-lg flex items-center gap-3 border border-pink-100">
+                <div class="flex gap-1 h-3 items-end">
+                    <div id="bar1" class="w-1 h-full bg-pink-400 rounded-full"></div>
+                    <div id="bar2" class="w-1 h-full bg-pink-500 rounded-full"></div>
+                    <div id="bar3" class="w-1 h-full bg-pink-300 rounded-full"></div>
+                </div>
+                <audio id="bg-music" loop>
+                    <source src="levo-comigo.mp3" type="audio/mpeg">
+                </audio>
+                <button id="toggle-music" onclick="togglePlay()" class="text-pink-600 font-bold text-[10px] uppercase tracking-wider">Pausar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const emojis = ['🎂', '✨', '💖', '🎈', '🎉', '🥳', '🎁', '⭐'];
+        const audio = document.getElementById('bg-music');
+        let currentCard = 0;
+        let animationStarted = false;
+
+        function startCelebration() {
+            document.getElementById('welcome-overlay').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('welcome-overlay').style.display = 'none';
+                document.getElementById('main-content').classList.remove('hidden');
+                document.getElementById('main-content').classList.add('flex');
+            }, 500);
+
+            audio.play().catch(e => console.log("Áudio bloqueado:", e));
+            updateMusicBars(true);
+
+            if (!animationStarted) {
+                // Menos emojis por segundo para não sobrecarregar mobile
+                setInterval(createEmoji, 350); 
+                animationStarted = true;
+            }
+        }
+
+        function nextCard(index) {
+            const current = document.getElementById(`card-${currentCard}`);
+            const next = document.getElementById(`card-${index}`);
+
+            if (current && next) {
+                current.classList.remove('active');
+                current.classList.add('prev');
+                
+                next.classList.add('active');
+                currentCard = index;
+            }
+        }
+
+        function togglePlay() {
+            const btn = document.getElementById('toggle-music');
+            if (audio.paused) {
+                audio.play();
+                btn.innerText = "Pausar";
+                updateMusicBars(true);
+            } else {
+                audio.pause();
+                btn.innerText = "Tocar";
+                updateMusicBars(false);
+            }
+        }
+
+        function updateMusicBars(playing) {
+            const bars = [document.getElementById('bar1'), document.getElementById('bar2'), document.getElementById('bar3')];
+            bars.forEach(bar => {
+                if (playing) {
+                    bar.style.animation = "music-bounce 0.8s ease-in-out infinite alternate";
+                } else {
+                    bar.style.animation = "none";
+                    bar.style.height = "4px";
+                }
+            });
+        }
+
+        function createEmoji() {
+            const emoji = document.createElement('div');
+            emoji.classList.add('emoji-particle');
+            
+            const emojiChar = emojis[Math.floor(Math.random() * emojis.length)];
+            const startPos = Math.random() * 95; // Evita scroll horizontal
+            const duration = (Math.random() * 3) + 3; 
+            const size = (Math.random() * 15) + 15; // Emojis levemente menores para mobile
+
+            emoji.innerText = emojiChar;
+            emoji.style.left = startPos + "vw";
+            emoji.style.fontSize = size + "px";
+            emoji.style.animationDuration = duration + "s";
+
+            document.body.appendChild(emoji);
+
+            setTimeout(() => {
+                emoji.remove();
+            }, duration * 1000);
+        }
+    </script>
+
+    <style>
+        @keyframes music-bounce {
+            from { height: 4px; }
+            to { height: 16px; }
+        }
+        #bar1 { animation-delay: 0.1s; }
+        #bar2 { animation-delay: 0.3s; }
+        #bar3 { animation-delay: 0.2s; }
+    </style>
+</body>
+</html>
